@@ -67,18 +67,46 @@ def main(pokename: str):
     ]
 
     genMoves = []
+    tmMoves = []
     for move in filtered_moves:
         move_name = move.move.name
         level_learned = move.version_group_details[0].level_learned_at
         if (level_learned != 0):
-            genMoves.append((move_name,level_learned))
-            
+            move_details = client.get_move(move.move.name)
+            move_name = move_details.name
+            power = move_details.power
+            priority = move_details.priority
+            pp = move_details.pp
+            acc = move_details.accuracy
+            dtype = move_details.damage_class.name
+            ttype = move_details.type.name
+            genMoves.append((level_learned, move_name, power, pp, acc, priority, dtype, ttype))
+        else:
+            move_details = client.get_move(move.move.name)
+            move_name = move_details.name
+            power = move_details.power
+            priority = move_details.priority
+            pp = move_details.pp
+            acc = move_details.accuracy
+            dtype = move_details.damage_class.name
+            ttype = move_details.type.name
+            tmMoves.append((level_learned, move_name, power, pp, acc, priority, dtype, ttype))
+
+    # # Sort the moves based on level learned in ascending order
+    genMoves.sort(key=lambda move: move[0])
+
     table = Table(show_header=True, header_style="bold magenta")
-    table.add_column("MOVE NAME", style="dim", width=60)
     table.add_column("LEVEL LEARNED", width=5)
+    table.add_column("MOVE NAME", style="dim", width=20)
+    table.add_column("POWER", width=5)
+    table.add_column("PP", width=3)
+    table.add_column("ACC", width=3)
+    table.add_column("PRIO", width=4)
+    table.add_column("DMG CLASS", width=10)
+    table.add_column("DMG TYPE", width=10)
 
     for move in genMoves:
-        table.add_row(str(move[0]), str(move[1]))
+        table.add_row(str(move[0]), str(move[1]), str(move[2]), str(move[3]), str(move[4]), str(move[5]), str(move[6]), str(move[7]))
 
     print(table)
     
