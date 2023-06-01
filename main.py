@@ -58,6 +58,8 @@ def main(pokename: str):
     target_generation = promptGeneration("What generation is it from?")
 
     pokemon = client.get_pokemon(target_pokemon)
+    print(pokemon)
+    print(dir(pokemon))
     moves = pokemon.moves
 
     filtered_moves = [
